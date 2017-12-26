@@ -6,21 +6,21 @@ require File.dirname(__FILE__) + '/log'
 db = SQLite3::Database.new 'test.sqlite3'
 key_number = 0
 num = 1
-nfc_port = "/dev/ttyUSB" << num.to_s
-key_port = "/dev/ttyUSB" << key_number.to_s
+nfc_port = "/dev/ttyUSB" + num.to_s
+key_port = "/dev/ttyUSB" + key_number.to_s
 baud = 9600
 spw = SerialPort.new(key_port, baud)
 file_name = "status.txt"
 status = ""
 
-puts "KEYPORT : " << key_port
+puts "KEYPORT : " + key_port
 
 loop do
 	begin
 		spr = SerialPort.new(nfc_port, baud)
 		spr.read_timeout = 100
 		
-		puts "NFCPORT : " << nfc_port
+		puts "NFCPORT : " + nfc_port
 
 		loop do
 			begin
@@ -46,11 +46,11 @@ loop do
 					end
 				}
 
-				#puts "NFC : " << nfc
+				#puts "NFC : " + nfc
 
 				if nfc != ""
 					
-					str = 'select * from users where nfc=\'' << nfc << '\''
+					str = 'select * from users where nfc=\'' + nfc + '\''
 					user = db.execute(str)
 
 					if user.length > 0
@@ -102,6 +102,6 @@ loop do
 			num = num + 1
 		end
 
-		nfc_port = '/dev/ttyUSB' << num.to_s
+		nfc_port = '/dev/ttyUSB' + num.to_s
 	end
 end
