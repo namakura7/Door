@@ -75,8 +75,8 @@ loop do
 						begin
 							spw.write str
 							file = File.open(file_name, "w")
-                            file.puts(status)
-                            file.close
+							file.puts(status)
+							file.close
 						rescue
 							puts "Error, cannot write key_port."
 						end
