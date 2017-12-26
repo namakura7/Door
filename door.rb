@@ -96,8 +96,23 @@ loop do
 
 		if nfc != ""
 			
-			str = 'select * from users where nfc=\'' + nfc + '\''
-			user = db.execute(str)
+			begin
+				sql = 'select * from users where nfc=\'' + nfc + '\''
+				user = db.execute(sql)
+			rescue
+				sql = <<-SQL
+				create table users (
+					id integer primary key,
+					name text,
+					nfc text
+				);
+				SQL
+
+				db.execute(sql)
+
+				retry
+			end
+
 
 			if user.length > 0
 
