@@ -36,6 +36,8 @@ for key_number in 0..9
 	end
 end
 
+puts "KEYPORT : " + key_name
+
 for nfc_number in 0..9
 	if nfc_number == key_number
 		next
@@ -67,7 +69,6 @@ for nfc_number in 0..9
 	end
 end
 
-puts "KEYPORT : " + key_name
 puts "NFCPORT : " + nfc_name
 
 loop do

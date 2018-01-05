@@ -58,12 +58,13 @@ void loop(){
     int angle;
 
     if(status){
-      angle = OPEN_ANGLE;
+      angle = CLOSE_ANGLE;
       delay(WAIT_TIME);
     }
     else
-      angle = CLOSE_ANGLE;
+      angle = OPEN_ANGLE;
 
+    servo.attach(SERVO);
     servo.write(angle);
     status = !status;
     delay(1000);
