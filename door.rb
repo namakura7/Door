@@ -14,6 +14,7 @@ for key_number in 0..9
 
 	begin
 		key_sp = SerialPort.new(key_name, baud)
+		key_sp.read_timeout = 100
 		key_sp.write "w"
 
 		who = ""
@@ -39,7 +40,6 @@ for key_number in 0..9
 				next
 			end
 		else
-			key_sp.read_timeout = 100
 			break
 		end
 	rescue
@@ -59,13 +59,26 @@ for nfc_number in 0..9
 
 	begin
 		nfc_sp = SerialPort.new(nfc_name, baud)
-		sleep(0.5)
-		who = nfc_sp.readline
+		nfc_sp.read_timeout = 100
+		nfc_sp.write "w"
+
+		who = ""
+		loop do
+			begin
+				who += nfc_sp.readline
+				if who.index("\n")
+					break
+				end
+			rescue EOFError
+				retry
+			end
+		end
+		who.chomp!
 
 		if who == ""
 			raise
 		elsif who != "NFC"
-			if nfc_number == 9
+			if nfc_number >= 9
 				puts "Can't find NFCPORT."
 				exit
 			else
@@ -130,9 +143,27 @@ loop do
 			if user.length > 0
 
 				begin
+					key_sp.write "1"
+				rescue
+					puts "Error, cannot write " + key_name + "."
+				end
+
+				begin
 					key_sp.write "0"
-					sleep(0.5)
-					status = key_sp.readline
+
+					status = ""
+					loop do
+						begin
+							status += key_sp.readline
+							if status.index("\n")
+								break
+							end
+						rescue EOFError
+							retry
+						end
+					end
+					status.chomp!
+
 					if status == ""
 						raise
 					end
@@ -140,12 +171,6 @@ loop do
 					puts e
 					sleep(1)
 					retry
-				end
-
-				begin
-					key_sp.write "1"
-				rescue
-					puts "Error, cannot write " + key_name + "."
 				end
 
 				puts log(status, user[0][1])
