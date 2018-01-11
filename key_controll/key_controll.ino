@@ -6,7 +6,8 @@
 #define CLOSE_ANGLE 0
 
 #define SWITCH 2
-#define WAIT_TIME 6000
+#define LED 7
+#define WAIT_TIME 3000
 
 Servo servo;
 bool status; // true:OPEN false:CLOSE
@@ -14,6 +15,7 @@ bool status; // true:OPEN false:CLOSE
 void setup(){
   Serial.begin(9600);
   pinMode(SWITCH, INPUT_PULLUP);
+  pinMode(LED, OUTPUT);
   status = true;
 }
 
@@ -29,10 +31,10 @@ void loop(){
       int angle;
 
       if(status)
-        angle = OPEN_ANGLE;
-      else
         angle = CLOSE_ANGLE;
-      
+      else
+        angle = OPEN_ANGLE;
+
       servo.write(angle);
       status = !status;
 
@@ -57,6 +59,8 @@ void loop(){
   else if(digitalRead(SWITCH) == LOW){
     int angle;
 
+    digitalWrite(LED, HIGH);
+
     if(status){
       angle = CLOSE_ANGLE;
       delay(WAIT_TIME);
@@ -69,5 +73,7 @@ void loop(){
     status = !status;
     delay(1000);
     servo.detach();
+
+    digitalWrite(LED, LOW);
   }
 }

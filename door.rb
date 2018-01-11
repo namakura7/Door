@@ -14,8 +14,20 @@ for key_number in 0..9
 
 	begin
 		key_sp = SerialPort.new(key_name, baud)
-		sleep(0.5)
-		who = key_sp.readline
+		key_sp.write "w"
+
+		who = ""
+		loop do
+			begin
+				who += key_sp.readline
+				if who.index("\n")
+					break
+				end
+			rescue EOFError
+				retry
+			end
+		end
+		who.chomp!
 
 		if who == ""
 			raise
@@ -96,7 +108,7 @@ loop do
 		}
 
 		if nfc != ""
-			
+
 			begin
 				sql = 'select * from users where nfc=\'' + nfc + '\''
 				user = db.execute(sql)
