@@ -7,7 +7,13 @@ db = SQLite3::Database.new 'test.sqlite3'
 baud = 9600
 posix = "/dev/ttyUSB"
 windows = "COM"
-serial_port = posix
+
+if RUBY_PLATFORM.downcase =~ /mswin(?!ce)|mingw|cygwin|bccwin/
+	serial_port = windows
+else
+	serial_port = posix
+end
+
 
 for key_number in 0..9
 	key_name = serial_port + key_number.to_s
