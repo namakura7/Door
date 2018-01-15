@@ -32,15 +32,13 @@ for key_number in 0..9
 
 		if who == ""
 			raise
-		elsif who != "KEY"
-			if key_number == 9
-				puts "Can't find KEYPORT."
-				exit
-			else
-				next
-			end
-		else
+		elsif who == "KEY"
 			break
+		end
+	rescue Errno::ENOENT => e # No such file or directory
+		if key_number >= 9
+			puts "Can't find KEYPORT."
+			exit
 		end
 	rescue
 		sleep(1)
@@ -87,6 +85,11 @@ for nfc_number in 0..9
 		else
 			nfc_sp.read_timeout = 100
 			break
+		end
+	rescue Errno::ENOENT => e # No such file or directory
+		if key_number >= 9
+			puts "Can't find KEYPORT."
+			exit
 		end
 	rescue
 		sleep(1)

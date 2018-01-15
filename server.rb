@@ -11,38 +11,49 @@ status = ""
 
 	begin
 		key_sp = SerialPort.new(key_port, baud)
+		key_sp.read_timeout = 100
+		key_sp.write "w"
 
-		begin
-			key_sp.write "w"
-			sleep(0.5)
-			who = key_sp.readline.chomp
-			puts "who : " + who
-
-			if who == ""
-				raise
-			elsif who != "KEY"
-				next
+		who = ""
+		loop do
+			begin
+				who += key_sp.readline
+				if who.index("\n")
+					break
+				end
+			rescue EOFError
+				retry
 			end
-		rescue => e
-			sleep(1)
-			retry
+		end
+		who.chomp!
+
+		if who != "KEY"
+			next
 		end
 
-		begin
-			key_sp.write "0"
-			sleep(0.5)
-			status = key_sp.readline.chomp
-			puts "status : " + status
-			if status == ""
-				raise
+		key_sp.write "0"
+
+		loop do
+			begin
+				status += key_sp.readline
+				if status.index("\n")
+					break
+				end
+			rescue EOFError
+				retry
 			end
-		rescue => e
-			sleep(1)
-			retry
+		end
+		status.chomp!
+
+		if status == ""
+			puts "Can't change status."
+			exit
+		else
+			log(status, "SERVER")
 		end
 
 		# 1.7秒のsleepが必要
-		# sleep(1.7)
+		sleep(1.7)
 		key_sp.write "1"
 		key_sp.close
 
@@ -51,9 +62,3 @@ status = ""
 		next
 	end
 }
-
-if status == ""
-	puts "Can't change status."
-else
-	log(status, "SERVER")
-end
