@@ -7,16 +7,16 @@ nfc_port = '/dev/ttyUSB0'
 baud = 9600
 nfc = String.new
 
-puts "ユーザー名を入力してください。"
+puts 'ユーザー名を入力してください。'
 username = gets.chomp
 
-puts "NFCをかざしてください。"
+puts 'NFCをかざしてください。'
 SerialPort.open(nfc_port, baud) do |sp|
 	sp.read_timeout = 10
 	loop do
 		begin
 			nfc += sp.readline
-			if nfc.index("\n")
+			if nfc.index('\n')
 				break
 			end
 		rescue EOFError
@@ -35,21 +35,21 @@ tmp.each { |chr|
 		nfc = chr
 	end
 }
-puts "NFC : \"" << nfc << "\""
+puts "NFC : \"#{nfc}\""
 
-tag = db.execute('select * from users where nfc=\'' << nfc.split(/\s*\n\s*/)[0] << '\'')
+tag = db.execute("select * from users where nfc='#{nfc.split(/\s*\n\s*/)[0]}'")
 if tag.length > 0
-	puts "そのNFCタグはすでに使われています。"
-	nfc = ""
+	puts 'そのNFCタグはすでに使われています。'
+	nfc = ''
 end
 
-if nfc != ""
-	user = db.execute('select * from users where name=\'' << username << '\'')
+if nfc != ''
+	user = db.execute("select * from users where name='#{username}'")
 
 	if user.length > 0
-		str = "update users set nfc = \"" << nfc << "\" where name = \"" << username << "\";"
+		str = "update users set nfc = \"#{nfc}\" where name = \"#{username}\";"
 	else
-		str = 'insert into users (name, nfc) values (\'' << username << '\', \'' << nfc.split(/\s*\n\s*/)[0] << '\')'
+		str = "insert into users (name, nfc) values ('#{username}', '#{nfc.split(/\s*\n\s*/)[0]}')"
 	end
 	db.execute(str)
 
