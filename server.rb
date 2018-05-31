@@ -7,7 +7,7 @@ baud = 9600
 status = ""
 
 (0..9).each { |num|
-	key_port = '/dev/ttyUSB' + num.to_s
+	key_port = "/dev/ttyUSB#{num.to_s}"
 
 	begin
 		key_sp = SerialPort.new(key_port, baud)

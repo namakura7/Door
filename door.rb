@@ -52,7 +52,7 @@ for key_number in 0..9
 	end
 end
 
-puts "KEYPORT : " + key_name
+puts "KEYPORT : #{key_name}"
 
 for nfc_number in 0..9
 	if nfc_number == key_number
@@ -103,7 +103,7 @@ for nfc_number in 0..9
 	end
 end
 
-puts "NFCPORT : " + nfc_name
+puts "NFCPORT : #{nfc_name}"
 
 loop do
 	begin
@@ -132,7 +132,7 @@ loop do
 		if nfc != ""
 
 			begin
-				sql = 'select * from users where nfc=\'' + nfc + '\''
+				sql = "select * from users where nfc='#{nfc}'"
 				user = db.execute(sql)
 			rescue
 				sql = <<-SQL
@@ -154,7 +154,7 @@ loop do
 				begin
 					key_sp.write "1"
 				rescue
-					puts "Error, cannot write " + key_name + "."
+					puts "Error, cannot write #{key_name}."
 				end
 
 				begin
