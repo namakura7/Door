@@ -1,9 +1,9 @@
-require 'sqlite3'
-require 'serialport'
-require File.dirname(__FILE__) + '/log'
+require "sqlite3"
+require "serialport"
+require "#{File.dirname(__FILE__)}/log"
 
 
-db = SQLite3::Database.new 'test.sqlite3'
+db = SQLite3::Database.new "test.sqlite3"
 baud = 9600
 posix = "/dev/ttyUSB"
 windows = "COM"
