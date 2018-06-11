@@ -1,6 +1,6 @@
-require 'serialport'
-require 'readline'
-require File.dirname(__FILE__) + '/log'
+require "serialport"
+require "readline"
+require "#{File.dirname(__FILE__)}/log"
 
 
 baud = 9600
