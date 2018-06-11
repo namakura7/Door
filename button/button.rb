@@ -1,7 +1,6 @@
 require "serialport"
-require "#{File.dirname(__FILE__)}/server"
+require "#{File.dirname(__FILE__)}/../server"
 
-db = SQLite3::Database.new "test.sqlite3"
 baud = 9600
 posix = "/dev/ttyUSB"
 windows = "COM"
@@ -28,21 +27,12 @@ loop do
 				retry
 			end
 		end
-		tmp = tmp.split(/\s*\n\s*/)
-		max = 0
-		btn = ""
+		tmp.chomp!
 
-		tmp.each { |chr|
-			if chr.size > max
-				max = chr.size
-				btn = chr
-			end
-		}
-
-		if btn != ""
-
+		if tmp == ""
+			raise
+		elsif tmp == "PUSH"
 			server()
-
 		end
 
 	rescue => e
